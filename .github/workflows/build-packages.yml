@@ -17,6 +17,7 @@ jobs:
           - x86_64
         sdk:
           - SNAPSHOT
+          - openwrt-24.10
 
     steps:
       - uses: actions/checkout@main
@@ -63,6 +64,6 @@ jobs:
       - name: Release Firmware
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.run_number }}-${{ matrix.arch }}
+          tag_name: ${{ github.run_number }}-${{ matrix.arch }}-${{ matrix.sdk }}
           files: "bin/packages/${{ matrix.arch }}/packages_ci/*.[ai]pk"
           body: |
