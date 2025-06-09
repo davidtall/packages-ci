@@ -57,11 +57,9 @@ jobs:
           name: ${{ matrix.arch }}
           path: bin/packages/${{ matrix.arch }}/packages_ci/*.[ai]pk
 
-
-      - name: Upload packages
-        uses: ncipollo/release-action@main
+      - name: Release Firmware
+        uses: softprops/action-gh-release@v2
         with:
-          artifacts: "bin/packages/${{ matrix.arch }}/packages_ci/*.[ai]pk"
-          allowUpdates: true
-          replacesArtifacts: true
-          tag: ${{ github.run_number }}-${{ matrix.arch }}
+          tag_name: ${{ github.run_number }}-${{ matrix.arch }}
+          files: "bin/packages/${{ matrix.arch }}/packages_ci/*.[ai]pk"
+          body: |
