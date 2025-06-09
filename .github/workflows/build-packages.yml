@@ -57,11 +57,11 @@ jobs:
           name: ${{ matrix.arch }}
           path: bin/packages/${{ matrix.arch }}/packages_ci/*.[ai]pk
 
+
       - name: Upload packages
         uses: ncipollo/release-action@main
         with:
-          name: daed_${{ env.version }}
-          allowUpdates: true
-          tag: daed_${{ env.version }}
-          replacesArtifacts: true
           artifacts: "bin/packages/${{ matrix.arch }}/packages_ci/*.[ai]pk"
+          allowUpdates: true
+          replacesArtifacts: true
+          tag: ${{ github.run_number }}-${{ matrix.arch }}
