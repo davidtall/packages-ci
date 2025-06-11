@@ -1,0 +1,68 @@
+name: Build IPK
+
+on: workflow_dispatch
+
+#CI权限
+permissions: write-all
+
+jobs:
+  build:
+    name: Build ${{ matrix.arch }}-${{ matrix.sdk }}
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - aarch64_generic
+          - x86_64
+        sdk:
+          - openwrt-24.10
+
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+
+
+      - name: Init build dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo swapoff -a
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install clang-15 llvm-15 npm
+          sudo npm install -g pnpm
+          sudo npm i taze -g
+
+      - name: Get packages
+        run: |
+          git clone https://github.com/sbwml/node-empty
+          $GITHUB_WORKSPACE/diy.sh
+
+      - name: Building packages
+        uses: sbwml/openwrt-gh-action-sdk@go1.23
+        env:
+          ARCH: ${{ matrix.arch }}-${{ matrix.sdk }}
+          FEEDNAME: packages_ci
+          PACKAGES: luci-app-daed
+          NO_REFRESH_CHECK: true
+
+      - name: Verify packages saved
+        run: |
+          find bin/packages/${{ matrix.arch }}/packages_ci/ -maxdepth 1 -name '*.[ai]pk' -type f | grep .
+          
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: ${{ matrix.arch }}
+          path: bin/packages/${{ matrix.arch }}/packages_ci/*.[ai]pk
+
+      - name: Release Firmware
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.run_number }}-${{ matrix.arch }}-${{ matrix.sdk }}
+          files: "bin/packages/${{ matrix.arch }}/packages_ci/*.[ai]pk"
+          body: |

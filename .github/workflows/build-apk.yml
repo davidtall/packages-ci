@@ -1,4 +1,4 @@
-name: Build packages
+name: Build APK
 
 on: workflow_dispatch
 
@@ -8,7 +8,7 @@ permissions: write-all
 jobs:
   build:
     name: Build ${{ matrix.arch }}-${{ matrix.sdk }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -17,7 +17,6 @@ jobs:
           - x86_64
         sdk:
           - SNAPSHOT
-          - openwrt-24.10
 
     steps:
       - uses: actions/checkout@main
@@ -39,7 +38,6 @@ jobs:
 
       - name: Get packages
         run: |
-          git clone https://github.com/sbwml/node-empty
           $GITHUB_WORKSPACE/diy.sh
 
       - name: Building packages
