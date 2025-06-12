@@ -45,7 +45,7 @@ jobs:
         env:
           ARCH: ${{ matrix.arch }}-${{ matrix.sdk }}
           FEEDNAME: packages_ci
-          PACKAGES: luci-app-dae
+          PACKAGES: luci-app-dae luci-app-daed
           NO_REFRESH_CHECK: true
           V: 99
 
