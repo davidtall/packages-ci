@@ -14,6 +14,7 @@ jobs:
       matrix:
         arch:
           - aarch64_generic
+          - x86_64
         sdk:
           - openwrt-24.10
 
@@ -30,24 +31,24 @@ jobs:
         run: |
           sudo swapoff -a
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-#          sudo -E apt-get -qq update
-#          sudo -E apt-get -qq install clang-15 llvm-15 npm
-#          sudo npm install -g pnpm
-#          sudo npm i taze -g
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install clang-15 llvm-15 npm
+          sudo npm install -g pnpm
+          sudo npm i taze -g
 
       - name: Get packages
         run: |
           git clone https://github.com/sbwml/node-empty
-#          $GITHUB_WORKSPACE/diy.sh
+          $GITHUB_WORKSPACE/diy.sh
 
       - name: Building packages
         uses: sbwml/openwrt-gh-action-sdk@go1.23
         env:
           ARCH: ${{ matrix.arch }}-${{ matrix.sdk }}
           FEEDNAME: packages_ci
-          PACKAGES: luci-app-dae
+          PACKAGES: luci-app-dae luci-app-daed
           NO_REFRESH_CHECK: true
-          V: 99
+
 
       - name: Verify packages saved
         run: |
