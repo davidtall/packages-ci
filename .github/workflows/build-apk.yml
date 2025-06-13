@@ -13,8 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         arch:
-          - aarch64_generic
-          - x86_64
+          - aarch64_cortex-a53
         sdk:
           - SNAPSHOT
 
