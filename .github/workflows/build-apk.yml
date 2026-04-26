@@ -8,14 +8,14 @@ permissions: write-all
 jobs:
   build:
     name: Build ${{ matrix.arch }}-${{ matrix.sdk }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         arch:
           - aarch64_cortex-a53
         sdk:
-          - SNAPSHOT
+          - 25.10
 
     steps:
       - uses: actions/checkout@main
@@ -40,7 +40,7 @@ jobs:
           $GITHUB_WORKSPACE/diy.sh
 
       - name: Building packages
-        uses: davidtall/gh-action-sdk@go1.24
+        uses: sbwml/gh-action-sdk@go1.26
         env:
           ARCH: ${{ matrix.arch }}-${{ matrix.sdk }}
           FEEDNAME: packages_ci
