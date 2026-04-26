@@ -15,7 +15,7 @@ jobs:
         arch:
           - aarch64_cortex-a53
         sdk:
-          - 25.10
+          - master
 
     steps:
       - uses: actions/checkout@main
